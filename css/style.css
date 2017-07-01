@@ -1,0 +1,58 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+
+}
+
+.title-text{
+	text-align: center;
+}
+
+#map-container {
+	width: 800px;
+	height: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+svg {
+	position: absolute;
+}
+
+.map {
+	border: medium solid #999;
+}
+
+.ridings {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1px;
+}
+
+.background {
+	fill: #cccccc
+}
+
+.radio-buttons {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.info-block {
+	width: 100%;
+	height: 500px;
+}
+
+#info-block-left {
+	background-color: lightcoral;
+}
+
+#info-block-centre {
+	background-color: lightblue;
+}
+
+#info-block-right {
+	background-color: lightgreen;
+}

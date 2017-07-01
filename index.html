@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My Coordinated Visualization</title>
+
+        <!--main stylesheet-->
+        <link rel="stylesheet" href="css/style.css" />
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+              crossorigin="anonymous">
+
+        <!--libraries-->
+        <script src="lib/d3.v3.js"></script>
+        <script src="lib/topojson.v1.min.js"></script>
+        <script src="lib/queue.js"></script>
+
+        <script
+                src="https://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+                crossorigin="anonymous"></script>
+
+        <!--link to main JavaScript file-->
+        <script src="js/main.js"></script>
+
+    </head>
+    <body>
+        <h2 class="title-text">Canadian Federal Electoral Boundaries</h2>
+        <div id="map-container"></div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <form>
+                    <div class="col-sm-4">
+                        <input class="radio-buttons" type="radio" name="left-or-right" value="left">
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="radio-buttons" type="radio" name="left-or-right" value="right">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="info-block" id="info-block-left">
+                        <div id="mp-photo-left"></div>
+                        <div id="riding-name-left"></div>
+                        <div id="mp-name-left"></div>
+                        <div id="map-party-left"></div>
+                        <div id="mp-url-left"></div>
+                        <div id="mp-office-address-left"></div>
+                        <div id="mp-office-tel-left"></div>
+                        <div id="mp-office-fax-left"></div>
+                        <div id="mp-office-parl-address-left"></div>
+                        <div id="mp-office-parl-tel-left"></div>
+                        <div id="mp-office-parl-fax-left"></div>
+                        <div id="mp-parl-url-left"></div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="info-block" id="info-block-centre">
+                        centre
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="info-block" id="info-block-right">
+                        <div id="mp-photo-right"></div>
+                        <div id="riding-name-right"></div>
+                        <div id="mp-name-right"></div>
+                        <div id="map-party-right"></div>
+                        <div id="mp-url-right"></div>
+                        <div id="mp-office-address-right"></div>
+                        <div id="mp-office-tel-right"></div>
+                        <div id="mp-office-fax-right"></div>
+                        <div id="mp-office-parl-address-right"></div>
+                        <div id="mp-office-parl-tel-right"></div>
+                        <div id="mp-office-parl-fax-right"></div>
+                        <div id="mp-parl-url-right"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

@@ -49,12 +49,12 @@ window.onload = function() {
             if (error) throw error;
 
 			g.append("g")
-				.attr("class", "ridings")
+				//.attr("class", "ridings")
 				.selectAll("path")
 				.data(topojson.feature(ridings, ridings.objects.canada_districts_4326).features)
                 .enter()
 				.append("path")
-                .attr('id', function(d) { return 'FEDNUM' + d.properties.FEDNUM })
+                .attr("class", function(d) { return 'ridings FEDNUM' + d.properties.FEDNUM })
 				.attr("d", path)
                 .on('mouseover', highlight)
                 .on('mouseout', dehighlight)
@@ -67,11 +67,9 @@ window.onload = function() {
 
 	function highlight(data) {
 
-		//TODO: disjoint ridings need to highlight together
-
 		var props = data.properties;
 
-        d3.select('#FEDNUM' + props.FEDNUM) //select the current region in the DOM
+        d3.selectAll('.FEDNUM' + props.FEDNUM) //select the current region in the DOM
 			.style('fill', '#000'); //set the enumeration unit fill to black
 
 	}
@@ -81,7 +79,7 @@ window.onload = function() {
 
         var props = data.properties;
 
-        d3.select('#FEDNUM' + props.FEDNUM) //select the current region in the DOM
+        d3.selectAll('.FEDNUM' + props.FEDNUM) //select the current region in the DOM
             .style('fill', '#fff'); //set the enumeration unit fill to black
 
 	}
@@ -91,11 +89,12 @@ window.onload = function() {
 
 		var side = $('input[name=left-or-right]:checked').val();
 
-        var requestString = 'http://represent.opennorth.ca/representatives/?district_name='
+        var ridingRequestString = 'http://represent.opennorth.ca/representatives/?district_name='
 			                + data.properties.ENNAME.replace(/--/g, '—')
-							+ '&elected_office=MP'
+							+ '&elected_office=MP';
 		var ridingRequest = new XMLHttpRequest();
-		ridingRequest.open('GET', requestString, true);
+		ridingRequest.open('GET', ridingRequestString, true);
+        //ridingRequest.setRequestHeader('User-Agent', 'Isaac Boates (iboates@gmail.com), building cartographic interface');
 		
         ridingRequest.onload = function (e) {
             if (ridingRequest.readyState === 4) {
@@ -116,6 +115,62 @@ window.onload = function() {
                     $('#mp-office-parl-fax-' + side).text(ridingJSON.objects["0"].offices["0"].fax);
                     $('#mp-photo-' + side).html('<img src="' + ridingJSON.objects["0"].photo_url + '">');
                     $('#mp-parl-url-' + side).text(ridingJSON.objects["0"].url);
+
+					mpName = ridingJSON.objects["0"].name;
+                    ballotRequest = new XMLHttpRequest();
+                    var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?politician='
+						                          + mpName.replace(/ /g, '-').toLowerCase()
+                    							  + '&format=json';
+                    //console.log(ballotRequestString)
+                    ballotRequest.open('GET', ballotRequestString, true);
+                    //ballotRequest.setRequestHeader('User-Agent', 'Isaac Boates (iboates@gmail.com), building cartographic interface');
+
+                    ballotRequest.onload = function (e) {
+                        if (ridingRequest.readyState === 4) {
+                            if (ridingRequest.status === 200) {
+
+                            	var ballotJSON = JSON.parse(ballotRequest.responseText);
+                            	//console.log(ballotJSON);
+
+								for (i=0; i<ballotJSON.objects.length; i++) {
+
+									var voteRequestString = 'http://api.openparliament.ca'
+														+ ballotJSON.objects[i].vote_url
+														+ '?format=json';
+                                    //console.log(voteRequestString)
+									voteRequest = new XMLHttpRequest();
+									voteRequest.open('GET', voteRequestString, true);
+
+									voteRequest.onload = function (e) {
+										if (voteRequest.readyState === 4) {
+											if (voteRequest.status === 200) {
+
+												var voteJSON = JSON.parse(voteRequest.responseText);
+												//console.log(voteJSON);
+
+                                                var vote_html = $('<li>').attr('id', 'vote' + i);
+                                                console.log(ballotJSON.objects[i]);
+                                                vote_html.html([ballotJSON.objects[i].ballot
+												                + ' on '
+																+ ballotJSON.objects[i].vote_url
+																+ '('
+																+ voteJSON.description.en]);
+                                                				+ ')';
+                                                //console.log(vote_html);
+                                                vote_html.appendTo('#votes-container-' + side);
+
+											}
+										}
+									}
+
+									voteRequest.send(null);
+
+								}
+							}
+                        }
+                    }
+
+                    ballotRequest.send(null);
 
                 }
             }

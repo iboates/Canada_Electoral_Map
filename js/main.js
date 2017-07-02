@@ -1,5 +1,12 @@
 window.onload = function() {
 
+    side = $('input[name=left-or-right]:checked').val();
+
+    $('input[name=left-or-right]').change(function(){
+    	side = $('input[name=left-or-right]:checked').val();
+	})
+
+
 	//map frame dimensions
 	var width = 800;
 	var height = 400;
@@ -84,107 +91,107 @@ window.onload = function() {
 
 	}
 
-
-	function getInfo(data) {
-
-		var side = $('input[name=left-or-right]:checked').val();
-
-        var ridingRequestString = 'http://represent.opennorth.ca/representatives/?district_name='
-			                + data.properties.ENNAME.replace(/--/g, '—')
-							+ '&elected_office=MP';
-		var ridingRequest = new XMLHttpRequest();
-		ridingRequest.open('GET', ridingRequestString, true);
-        //ridingRequest.setRequestHeader('User-Agent', 'Isaac Boates (iboates@gmail.com), building cartographic interface');
-		
-        ridingRequest.onload = function (e) {
-            if (ridingRequest.readyState === 4) {
-                if (ridingRequest.status === 200) {
-
-                	ridingJSON = JSON.parse(ridingRequest.responseText);
-                	//console.log(ridingJSON);
-
-					$('#riding-name-' + side).text(ridingJSON.objects["0"].district_name);
-                    $('#mp-name-' + side).text(ridingJSON.objects["0"].name);
-                    $('#map-party-' + side).text(ridingJSON.objects["0"].party_name);
-                    $('#mp-url-left' + side).text(ridingJSON.objects["0"].personal_url);
-                    $('#mp-office-address-' + side).text(ridingJSON.objects["0"].offices[1].postal);
-                    $('#mp-office-tel-' + side).text(ridingJSON.objects["0"].offices[1].tel);
-                    $('#mp-office-fax-' + side).text(ridingJSON.objects["0"].offices[1].fax);
-                    $('#mp-office-parl-address-' + side).text(ridingJSON.objects["0"].offices["0"].postal);
-                    $('#mp-office-parl-tel-' + side).text(ridingJSON.objects["0"].offices["0"].tel);
-                    $('#mp-office-parl-fax-' + side).text(ridingJSON.objects["0"].offices["0"].fax);
-                    $('#mp-photo-' + side).html('<img src="' + ridingJSON.objects["0"].photo_url + '">');
-                    $('#mp-parl-url-' + side).text(ridingJSON.objects["0"].url);
-
-					mpName = ridingJSON.objects["0"].name;
-                    ballotRequest = new XMLHttpRequest();
-                    var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?politician='
-						                          + mpName.replace(/ /g, '-').toLowerCase()
-                    							  + '&format=json';
-                    //console.log(ballotRequestString)
-                    ballotRequest.open('GET', ballotRequestString, true);
-                    //ballotRequest.setRequestHeader('User-Agent', 'Isaac Boates (iboates@gmail.com), building cartographic interface');
-
-                    ballotRequest.onload = function (e) {
-                        if (ridingRequest.readyState === 4) {
-                            if (ridingRequest.status === 200) {
-
-                            	var ballotJSON = JSON.parse(ballotRequest.responseText);
-                            	//console.log(ballotJSON);
-
-								for (i=0; i<ballotJSON.objects.length; i++) {
-
-									var voteRequestString = 'http://api.openparliament.ca'
-														+ ballotJSON.objects[i].vote_url
-														+ '?format=json';
-                                    //console.log(voteRequestString)
-									voteRequest = new XMLHttpRequest();
-									voteRequest.open('GET', voteRequestString, true);
-
-									voteRequest.onload = function (e) {
-										if (voteRequest.readyState === 4) {
-											if (voteRequest.status === 200) {
-
-												var voteJSON = JSON.parse(voteRequest.responseText);
-												//console.log(voteJSON);
-
-                                                var vote_html = $('<li>').attr('id', 'vote' + i);
-                                                console.log(ballotJSON.objects[i]);
-                                                vote_html.html([ballotJSON.objects[i].ballot
-												                + ' on '
-																+ ballotJSON.objects[i].vote_url
-																+ '('
-																+ voteJSON.description.en]);
-                                                				+ ')';
-                                                //console.log(vote_html);
-                                                vote_html.appendTo('#votes-container-' + side);
-
-											}
-										}
-									}
-
-									voteRequest.send(null);
-
-								}
-							}
-                        }
-                    }
-
-                    ballotRequest.send(null);
-
-                }
-            }
-        };
-
-        ridingRequest.send(null);
-
-	}
-
     function zoomed() {
 
         projection.translate(d3.event.translate).scale(d3.event.scale);
         g.selectAll("path").attr("d", path);
 
     }
+
+
+    function getInfo(data) {
+
+        var ridingRequestString = 'http://represent.opennorth.ca/representatives/?district_name='
+            + data.properties.ENNAME.replace(/--/g, '—')
+            + '&elected_office=MP';
+
+		// Get The MP information by querying the riding
+		$.ajax({
+
+			url: ridingRequestString,
+			data: {format: 'json'},
+			error: function() {console.log('error when processing riding request')},
+			success: function(result) {
+
+                ridingJSON = result;
+				//console.log(ridingJSON)
+
+                $('#riding-name-' + side).text(ridingJSON.objects["0"].district_name);
+                $('#mp-name-' + side).text(ridingJSON.objects["0"].name);
+                $('#map-party-' + side).text(ridingJSON.objects["0"].party_name);
+                $('#mp-url-left' + side).text(ridingJSON.objects["0"].personal_url);
+                $('#mp-office-address-' + side).text(ridingJSON.objects["0"].offices[1].postal);
+                $('#mp-office-tel-' + side).text(ridingJSON.objects["0"].offices[1].tel);
+                $('#mp-office-fax-' + side).text(ridingJSON.objects["0"].offices[1].fax);
+                $('#mp-office-parl-address-' + side).text(ridingJSON.objects["0"].offices["0"].postal);
+                $('#mp-office-parl-tel-' + side).text(ridingJSON.objects["0"].offices["0"].tel);
+                $('#mp-office-parl-fax-' + side).text(ridingJSON.objects["0"].offices["0"].fax);
+                $('#mp-photo-' + side).html('<img src="' + ridingJSON.objects["0"].photo_url + '">');
+                $('#mp-parl-url-' + side).text(ridingJSON.objects["0"].url);
+
+                var mpName = ridingJSON.objects["0"].name;
+                var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?politician='
+                    + mpName.replace(/ /g, '-').toLowerCase()
+                    + '&format=json';
+
+				// Get the ballot information (voting history) for the MP
+                $.ajax({
+
+                    url: ballotRequestString,
+					data: {format: 'json'},
+					error: function() {console.log('error when processing riding request')},
+					success: function(result) {
+
+                    	var ballotJSON = result;
+
+                        for (i=0; i<ballotJSON.objects.length; i++) {
+
+                            var voteRequestString = 'http://api.openparliament.ca'
+                                + ballotJSON.objects[i].vote_url
+                                + '?format=json';
+
+                            // Get the information of each vote
+                            appendVoteHistory(i, voteRequestString, ballotJSON);
+
+                        }
+
+					}
+
+				})
+
+			}
+		});
+
+	};
+
+
+	function appendVoteHistory(i, voteRequestString, ballotJSON) {
+
+        $.ajax({
+
+            url: voteRequestString,
+            data: {format: 'json'},
+            error: function () {
+                console.log('error when processing vote request')
+            },
+            success: function (result) {
+
+            	var voteJSON = result;
+
+                var vote_html = $('<li>').attr('id', 'vote' + i);
+                console.log(ballotJSON.objects[i]);
+                vote_html.html([ballotJSON.objects[i].ballot
+                + ' on '
+                + ballotJSON.objects[i].vote_url
+                + '('
+                + voteJSON.description.en])
+                +')';
+                vote_html.appendTo('#votes-container');
+
+            }
+
+        });
+
+	}
 
 }

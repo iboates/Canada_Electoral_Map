@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5ab106cb-7dcd-4f98-80b8-4b32bf69ee45" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/css/style.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/main.js" afterPath="$PROJECT_DIR$/js/main.js" />
     </list>
@@ -22,8 +23,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="559">
-              <caret line="67" column="67" lean-forward="false" selection-start-line="67" selection-start-column="67" selection-end-line="67" selection-end-column="67" />
+            <state relative-caret-position="613">
+              <caret line="85" column="93" lean-forward="false" selection-start-line="85" selection-start-column="93" selection-end-line="85" selection-end-column="93" />
               <folding />
             </state>
           </provider>
@@ -32,8 +33,8 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="784">
-              <caret line="194" column="5" lean-forward="false" selection-start-line="194" selection-start-column="5" selection-end-line="194" selection-end-column="5" />
+            <state relative-caret-position="370">
+              <caret line="239" column="0" lean-forward="true" selection-start-line="239" selection-start-column="0" selection-end-line="239" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -42,8 +43,8 @@
       <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="774">
-              <caret line="43" column="16" lean-forward="false" selection-start-line="43" selection-start-column="16" selection-end-line="43" selection-end-column="16" />
+            <state relative-caret-position="703">
+              <caret line="58" column="24" lean-forward="false" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -80,8 +81,8 @@
         <option value="$PROJECT_DIR$/data/canada_electoral_districts_2015_simple.js" />
         <option value="$PROJECT_DIR$/data/novascotia_electoral_districts_2015_simple_albers.geojson" />
         <option value="$PROJECT_DIR$/js/main1.js" />
-        <option value="$PROJECT_DIR$/css/style.css" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/css/style.css" />
         <option value="$PROJECT_DIR$/js/main.js" />
       </list>
     </option>
@@ -195,6 +196,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///media/isaac/Data/electoral_map/index.html" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -295,15 +297,24 @@
       <workItem from="1498772802320" duration="3967000" />
       <workItem from="1498843448676" duration="20159000" />
       <workItem from="1498944337445" duration="4683000" />
-      <workItem from="1499020209686" duration="30000" />
+      <workItem from="1499020209686" duration="6520000" />
     </task>
+    <task id="LOCAL-00001" summary="a">
+      <created>1499020249614</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1499020249614</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37182000" />
+    <option name="totallyTimeSpent" value="43672000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-3" y="25" width="1926" height="1058" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3015625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -331,7 +342,8 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="a" />
+    <option name="LAST_COMMIT_MESSAGE" value="a" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -444,26 +456,26 @@
     <entry file="file://$PROJECT_DIR$/data/nova_scotia_districts.topojson" />
     <entry file="file://$PROJECT_DIR$/data/nova_scotia_districts_4326.topojson" />
     <entry file="file://$PROJECT_DIR$/js/main1.js" />
-    <entry file="file://$PROJECT_DIR$/css/style.css">
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="774">
-          <caret line="43" column="16" lean-forward="false" selection-start-line="43" selection-start-column="16" selection-end-line="43" selection-end-column="16" />
+        <state relative-caret-position="613">
+          <caret line="85" column="93" lean-forward="false" selection-start-line="85" selection-start-column="93" selection-end-line="85" selection-end-column="93" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
+    <entry file="file://$PROJECT_DIR$/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="67" column="67" lean-forward="false" selection-start-line="67" selection-start-column="67" selection-end-line="67" selection-end-column="67" />
+        <state relative-caret-position="703">
+          <caret line="58" column="24" lean-forward="false" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="784">
-          <caret line="194" column="5" lean-forward="false" selection-start-line="194" selection-start-column="5" selection-end-line="194" selection-end-column="5" />
+        <state relative-caret-position="370">
+          <caret line="239" column="0" lean-forward="true" selection-start-line="239" selection-start-column="0" selection-end-line="239" selection-end-column="0" />
           <folding />
         </state>
       </provider>

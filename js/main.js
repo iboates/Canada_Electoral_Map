@@ -1,11 +1,11 @@
 window.onload = function() {
 
     side = $('input[name=left-or-right]:checked').val();
-
     $('input[name=left-or-right]').change(function(){
     	side = $('input[name=left-or-right]:checked').val();
 	})
 
+    $('#get-bill-history-button').click(appendBillHistory);
 
 	//map frame dimensions
 	var width = 800;
@@ -135,29 +135,32 @@ window.onload = function() {
                     + '&format=json';
 
 				// Get the ballot information (voting history) for the MP
-                $.ajax({
+                /*$.ajax({
 
                     url: ballotRequestString,
 					data: {format: 'json'},
 					error: function() {console.log('error when processing riding request')},
 					success: function(result) {
 
-                    	var ballotJSON = result;
+                        console.log($('.vote-list-item').length);
+                        if ($('.vote-list-item').length == 0) {
 
-                        for (i=0; i<ballotJSON.objects.length; i++) {
+                            var ballotJSON = result;
 
-                            var voteRequestString = 'http://api.openparliament.ca'
-                                + ballotJSON.objects[i].vote_url
-                                + '?format=json';
+                            for (i = 0; i < ballotJSON.objects.length; i++) {
 
-                            // Get the information of each vote
-                            appendVoteHistory(i, voteRequestString, ballotJSON);
+                                var voteRequestString = 'http://api.openparliament.ca'
+                                    + ballotJSON.objects[i].vote_url
+                                    + '?format=json';
+
+                                // Get the information of each vote
+                                appendVoteHistory(i, voteRequestString, ballotJSON);
+
+                            }
 
                         }
-
-					}
-
-				})
+                    }
+				})*/
 
 			}
 		});
@@ -165,33 +168,98 @@ window.onload = function() {
 	};
 
 
-	function appendVoteHistory(i, voteRequestString, ballotJSON) {
+	function appendBillHistory() {
+
+	    $('.vote-result-item-centre').parent().remove();
+
+	    billRequestString = 'http://api.openparliament.ca/bills/?format=json';
 
         $.ajax({
 
-            url: voteRequestString,
+            url: billRequestString,
             data: {format: 'json'},
             error: function () {
-                console.log('error when processing vote request')
+                console.log('error when processing bill request')
             },
             success: function (result) {
 
-            	var voteJSON = result;
+            	var billJSON = result;
 
-                var vote_html = $('<li>').attr('id', 'vote' + i);
-                console.log(ballotJSON.objects[i]);
-                vote_html.html([ballotJSON.objects[i].ballot
-                + ' on '
-                + ballotJSON.objects[i].vote_url
-                + '('
-                + voteJSON.description.en])
-                +')';
-                vote_html.appendTo('#votes-container');
+            	//console.log(billJSON);
+
+            	for (var i=0; i<billJSON.objects.length; i++) {
+            	    //console.log(billJSON.objects[i]);
+                    //var vote_item = $('<div>').attr('class', 'vote-list-item').attr('id', 'vote-item-centre-' + i);
+                    //console.log(vote_item);
+
+                    vote_item = '<div class="container-fluid"><div class="row"><div class="vote-result-item-centre" id="'
+                                + billJSON.objects[i].number
+                                + '|'
+                                + String(billJSON.objects[i].session)
+                                + '"><b>Bill '
+                                + billJSON.objects[i].number
+                                + ', Session '
+                                + billJSON.objects[i].session
+                                + ' (Introduced '
+                                + billJSON.objects[i].introduced
+                                + '):'
+                                + '</b> '
+                                + billJSON.objects[i].name.en
+                                + '</div></div></div>';
+
+                    $('#vote-result-column-centre').append(vote_item);
+
+                }
+
+                if ( !$('#mp-name-left').is(':empty') ) {
+                    appendBallotHistory('left');
+                }
+
+                if ( !$('#mp-name-right').is(':empty') ) {
+                    appendBallotHistory('right');
+                }
 
             }
 
         });
 
 	}
+
+
+    function appendBallotHistory(side) {
+
+        var mpName = $('#mp-name-' + side).text();
+        var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?politician='
+            + mpName.replace(/ /g, '-').toLowerCase()
+            + '&format=json';
+
+        for (var i=0; i<$('.vote-result-item-centre').length; i++) {
+
+            var bill_and_session = $('.vote-result-item-centre')[i].id.split('|');
+            //console.log(bill_and_session)
+
+            $.ajax({
+
+                url: ballotRequestString,
+                data: {format: 'json'},
+                error: function () {
+                    console.log('error when processing ballot request')
+                },
+                success: function (result) {
+
+                    var ballotJSON = result;
+                    //console.log(ballotJSON.objects);
+
+                    //vote_html.appendTo('#votes-container');
+
+                    //$('#vote-result-column-centre').append(vote_item);
+
+                }
+
+            });
+
+        }
+
+    }
 
 }

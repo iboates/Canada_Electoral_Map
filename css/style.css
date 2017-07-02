@@ -55,3 +55,10 @@ svg {
 #info-block-right {
 	background-color: lightgreen;
 }
+
+.vote-result-item-centre {
+	height: 100%;
+	width: 100%;
+	background-color: pink;
+	margin: 5px;
+}

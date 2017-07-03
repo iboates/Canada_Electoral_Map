@@ -5,7 +5,7 @@ window.onload = function() {
     	side = $('input[name=left-or-right]:checked').val();
 	})
 
-    $('#get-bill-history-button').click(appendBillHistory);
+    $('#get-bill-history-button').click(appendVoteHistory);
 
 	//map frame dimensions
 	var width = 800;
@@ -134,90 +134,53 @@ window.onload = function() {
                     + mpName.replace(/ /g, '-').toLowerCase()
                     + '&format=json';
 
-				// Get the ballot information (voting history) for the MP
-                /*$.ajax({
-
-                    url: ballotRequestString,
-					data: {format: 'json'},
-					error: function() {console.log('error when processing riding request')},
-					success: function(result) {
-
-                        console.log($('.vote-list-item').length);
-                        if ($('.vote-list-item').length == 0) {
-
-                            var ballotJSON = result;
-
-                            for (i = 0; i < ballotJSON.objects.length; i++) {
-
-                                var voteRequestString = 'http://api.openparliament.ca'
-                                    + ballotJSON.objects[i].vote_url
-                                    + '?format=json';
-
-                                // Get the information of each vote
-                                appendVoteHistory(i, voteRequestString, ballotJSON);
-
-                            }
-
-                        }
-                    }
-				})*/
-
 			}
 		});
 
 	};
 
 
-	function appendBillHistory() {
+	function appendVoteHistory() {
 
 	    $('.vote-result-item-centre').parent().remove();
+        $('.ballot-item-' + side).parent().remove();
 
-	    billRequestString = 'http://api.openparliament.ca/bills/?format=json';
+	    voteRequestString = 'http://api.openparliament.ca/votes/?format=json';
 
         $.ajax({
 
-            url: billRequestString,
+            url: voteRequestString,
             data: {format: 'json'},
             error: function () {
                 console.log('error when processing bill request')
             },
             success: function (result) {
 
-            	var billJSON = result;
+            	var voteJSON = result;
 
-            	//console.log(billJSON);
+            	//console.log(voteJSON);
 
-            	for (var i=0; i<billJSON.objects.length; i++) {
-            	    //console.log(billJSON.objects[i]);
-                    //var vote_item = $('<div>').attr('class', 'vote-list-item').attr('id', 'vote-item-centre-' + i);
-                    //console.log(vote_item);
+            	for (var i=0; i<voteJSON.objects.length; i++) {
 
-                    vote_item = '<div class="container-fluid"><div class="row"><div class="vote-result-item-centre" id="'
-                                + billJSON.objects[i].number
-                                + '|'
-                                + String(billJSON.objects[i].session)
-                                + '"><b>Bill '
-                                + billJSON.objects[i].number
-                                + ', Session '
-                                + billJSON.objects[i].session
-                                + ' (Introduced '
-                                + billJSON.objects[i].introduced
-                                + '):'
+                    vote_item = '<div class="row vote-result"><div class="col-sm-2" id="vote-result-item-left|'
+                                + voteJSON.objects[i].url
+                                + '"></div><div class="col-sm-8 vote-result-item-centre" id="vote-result-item-centre|'
+                                + voteJSON.objects[i].url
+                                + '"><b>'
+                                + voteJSON.objects[i].date
+                                + ':'
                                 + '</b> '
-                                + billJSON.objects[i].name.en
-                                + '</div></div></div>';
+                                + voteJSON.objects[i].description.en
+                                + '</div><div class="col-sm-2" id="vote-result-item-right|'
+                                + voteJSON.objects[i].url
+                                + '"></div></div>';
 
-                    $('#vote-result-column-centre').append(vote_item);
+                    $('#info-block-centre').append(vote_item);
 
                 }
 
-                if ( !$('#mp-name-left').is(':empty') ) {
-                    appendBallotHistory('left');
-                }
-
-                if ( !$('#mp-name-right').is(':empty') ) {
-                    appendBallotHistory('right');
-                }
+                console.log('trying to append ballots...')
+                    appendBallotHistory();
 
             }
 
@@ -226,37 +189,99 @@ window.onload = function() {
 	}
 
 
-    function appendBallotHistory(side) {
+    function appendBallotHistory() {
 
-        var mpName = $('#mp-name-' + side).text();
-        var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?politician='
-            + mpName.replace(/ /g, '-').toLowerCase()
-            + '&format=json';
+        if ( !$('#mp-name-left').is(':empty') ) {
 
-        for (var i=0; i<$('.vote-result-item-centre').length; i++) {
+            var mpName = $('#mp-name-left').text();
 
-            var bill_and_session = $('.vote-result-item-centre')[i].id.split('|');
-            //console.log(bill_and_session)
+            console.log(mpName)
 
-            $.ajax({
+            function getBallot(i) {
 
-                url: ballotRequestString,
-                data: {format: 'json'},
-                error: function () {
-                    console.log('error when processing ballot request')
-                },
-                success: function (result) {
+                var voteRef = $('.vote-result-item-centre')[i].id.split('|')[1];
+                console.log(voteRef)
 
-                    var ballotJSON = result;
-                    //console.log(ballotJSON.objects);
+                var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?vote='
+                    + voteRef
+                    + '&politician='
+                    + mpName.replace(/ /g, '-').toLowerCase()
+                    + '&format=json';
+                console.log(ballotRequestString)
 
-                    //vote_html.appendTo('#votes-container');
+                $.ajax({
 
-                    //$('#vote-result-column-centre').append(vote_item);
+                    url: ballotRequestString,
+                    data: {format: 'json'},
+                    error: function () {
+                        console.log('error when processing ballot request')
+                    },
+                    success: function (result) {
 
-                }
+                        var ballotJSON = result;
+                        console.log(ballotJSON)
 
-            });
+                        ballot_item = '<div class="ballot-result-left" id="ballot-result-left|' + voteRef + '">' + ballotJSON.objects["0"].ballot + '</div>'
+                        console.log('#vote-result-item-left|' + voteRef)
+                        
+                        document.getElementById('vote-result-item-left|' + voteRef).innerHTML = ballot_item;
+
+                    }
+
+                });
+
+            }
+
+            // TODO: understand this because it is weird
+            for (var i = 0; i < $('.vote-result-item-centre').length; i++) {
+                getBallot(i);
+            }
+
+        }
+
+        if ( !$('#mp-name-right').is(':empty') ) {
+
+            var mpName = $('#mp-name-right').text();
+
+            function getBallot(i) {
+
+                var voteRef = $('.vote-result-item-centre')[i].id.split('|')[1];
+                //console.log(voteRef)
+
+                var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?vote='
+                    + voteRef
+                    + '&politician='
+                    + mpName.replace(/ /g, '-').toLowerCase()
+                    + '&format=json';
+                //console.log(ballotRequestString)
+
+                $.ajax({
+
+                    url: ballotRequestString,
+                    data: {format: 'json'},
+                    error: function () {
+                        console.log('error when processing ballot request')
+                    },
+                    success: function (result) {
+
+                        var ballotJSON = result;
+                        console.log(ballotJSON)
+
+                        ballot_item = '<div class="ballot-result-right" id="ballot-result-right|' + voteRef + '">' + ballotJSON.objects["0"].ballot + '</div>'
+                        //console.log('#vote-result-item-right|' + voteRef)
+
+                        document.getElementById('vote-result-item-right|' + voteRef).innerHTML = ballot_item;
+
+                    }
+
+                });
+
+            }
+
+            // TODO: understand this because it is weird
+            for (var i = 0; i < $('.vote-result-item-centre').length; i++) {
+                getBallot(i);
+            }
 
         }
 

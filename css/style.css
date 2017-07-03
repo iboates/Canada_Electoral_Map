@@ -45,7 +45,7 @@ svg {
 }
 
 #info-block-left {
-	background-color: lightcoral;
+	background-color: lightgoldenrodyellow;
 }
 
 #info-block-centre {
@@ -53,12 +53,20 @@ svg {
 }
 
 #info-block-right {
-	background-color: lightgreen;
+	background-color: lightgoldenrodyellow;
 }
 
 .vote-result-item-centre {
-	height: 100%;
-	width: 100%;
-	background-color: pink;
+	background-color: darkgrey;
+	margin: 5px;
+}
+
+.ballot-result-left {
+	background-color: lightgreen;
+	margin: 5px;
+}
+
+.ballot-result-right {
+	background-color: lightcoral;
 	margin: 5px;
 }

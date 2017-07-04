@@ -132,7 +132,7 @@ window.onload = function() {
                 $('#mp-photo-' + side).html('<img src="' + ridingJSON.objects["0"].photo_url + '">');
                 $('#mp-parl-url-' + side).text(ridingJSON.objects["0"].url);
 
-                appendBallotHistory();
+                appendBallotHistory(side);
 
             }
 
@@ -197,9 +197,6 @@ window.onload = function() {
 
                 }
 
-                console.log('trying to append ballots...')
-                    //appendBallotHistory();
-
             }
 
         });
@@ -207,77 +204,25 @@ window.onload = function() {
 	}
 
 
-    function appendBallotHistory() {
+    function appendBallotHistory(instant_side) {
 
-        if ( side == 'left' ) {
+	        // We use the variable "instant_side" here to get the selected side at the instant of the selection of an MP.
+            // If we were to just use the global "side" variable directly, then the ballots would start getting filled
+            // out on whatever side was currently selected, putting ballots on the wrong side if the other side was
+            // selected while the ballots were still being loaded.
 
-            var mpName = $('#mp-name-left').text();
+            var mpName = $('#mp-name-' + instant_side).text();
 
-            $('.ballot-text-left').remove();
-            $('.ballot-left')
+            $('.ballot-text-' + instant_side).remove();
+            $('.ballot-' + instant_side)
                 .removeClass('ballot-yes')
                 .removeClass('ballot-no')
                 .removeClass('ballot-did-not-vote');
 
-            function getBallot(i) {
-
-                var voteRef = $('.vote-description')[i].id.split('|')[1];
-                console.log(voteRef)
-
-                var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?vote='
-                    + voteRef
-                    + '&politician='
-                    + mpName.replace(/ /g, '-').toLowerCase()
-                    + '&format=json';
-                console.log(ballotRequestString)
-
-                $.ajax({
-
-                    url: ballotRequestString,
-                    data: {format: 'json'},
-                    error: function () {
-                        console.log('error when processing ballot request')
-                    },
-                    success: function (result) {
-
-                        var ballotJSON = result;
-                        console.log(ballotJSON)
-
-                        ballot_item = '<div class="floater"></div><div class="ballot-text-left">' + ballotJSON.objects["0"].ballot + '</div>';
-                        console.log('#vote-result-item-left|' + voteRef)
-
-                        if (ballotJSON.objects["0"].ballot == 'Yes') {
-                            document.getElementById('vote-result-item-left|' + voteRef).classList.add('ballot-yes');
-                        } else if (ballotJSON.objects["0"].ballot == 'No') {
-                            document.getElementById('vote-result-item-left|' + voteRef).classList.add('ballot-no');
-                        } else if (ballotJSON.objects["0"].ballot == 'Didn\'t vote') {
-                            document.getElementById('vote-result-item-left|' + voteRef).classList.add('ballot-did-not-vote');
-                        }
-
-                        document.getElementById('vote-result-item-left|' + voteRef).innerHTML = ballot_item;
-
-                    }
-
-                });
-
-            }
-
-            // TODO: understand this because it is weird
-            for (var i = 0; i < $('.vote-description').length; i++) {
-                getBallot(i);
-            }
-
+        // TODO: understand this because it is weird
+        for (var i = 0; i < $('.vote-description').length; i++) {
+            getBallot(i);
         }
-
-        if ( side == 'right' ) {
-
-            var mpName = $('#mp-name-right').text();
-
-            $('.ballot-text-right').remove();
-            $('.ballot-right')
-                .removeClass('ballot-yes')
-                .removeClass('ballot-no')
-                .removeClass('ballot-did-not-vote');
 
             function getBallot(i) {
 
@@ -301,31 +246,24 @@ window.onload = function() {
                     success: function (result) {
 
                         var ballotJSON = result;
-                        console.log(ballotJSON)
+                        //console.log(ballotJSON)
 
-                        ballot_item = '<div class="floater"></div><div class="ballot-text-right">' + ballotJSON.objects["0"].ballot + '</div>';
-                        //console.log('#vote-result-item-right|' + voteRef)
+                        ballot_item = '<div class="floater"></div><div class="ballot-text-left">' + ballotJSON.objects["0"].ballot + '</div>';
+                        //console.log('#vote-result-item-' + instant_side + '' + voteRef)
 
                         if (ballotJSON.objects["0"].ballot == 'Yes') {
-                            document.getElementById('vote-result-item-right|' + voteRef).classList.add('ballot-yes');
+                            document.getElementById('vote-result-item-' + instant_side + '|' + voteRef).classList.add('ballot-yes');
                         } else if (ballotJSON.objects["0"].ballot == 'No') {
-                            document.getElementById('vote-result-item-right|' + voteRef).classList.add('ballot-no');
+                            document.getElementById('vote-result-item-' + instant_side + '|' + voteRef).classList.add('ballot-no');
                         } else if (ballotJSON.objects["0"].ballot == 'Didn\'t vote') {
-                            document.getElementById('vote-result-item-right|' + voteRef).classList.add('ballot-did-not-vote');
+                            document.getElementById('vote-result-item-' + instant_side + '|' + voteRef).classList.add('ballot-did-not-vote');
                         }
 
-                        document.getElementById('vote-result-item-right|' + voteRef).innerHTML = ballot_item;
+                        document.getElementById('vote-result-item-' + instant_side + '|' + voteRef).innerHTML = ballot_item;
 
                     }
 
                 });
-
-            }
-
-            // TODO: understand this because it is weird
-            for (var i = 0; i < $('.vote-description').length; i++) {
-                getBallot(i);
-            }
 
         }
 

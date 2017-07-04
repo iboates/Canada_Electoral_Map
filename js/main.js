@@ -162,7 +162,7 @@ window.onload = function() {
 
             	for (var i=0; i<voteJSON.objects.length; i++) {
 
-                    vote_item = '<div class="row vote-result"><div class="col-sm-2" id="vote-result-item-left|'
+                    vote_item = '<div class="row vote-result"><div class="col-sm-2 left-ballot" id="vote-result-item-left|'
                                 + voteJSON.objects[i].url
                                 + '"></div><div class="col-sm-8 vote-result-item-centre" id="vote-result-item-centre|'
                                 + voteJSON.objects[i].url
@@ -171,7 +171,7 @@ window.onload = function() {
                                 + ':'
                                 + '</b> '
                                 + voteJSON.objects[i].description.en
-                                + '</div><div class="col-sm-2" id="vote-result-item-right|'
+                                + '</div><div class="col-sm-2 right-ballot" id="vote-result-item-right|'
                                 + voteJSON.objects[i].url
                                 + '"></div></div>';
 
@@ -221,9 +221,15 @@ window.onload = function() {
                         var ballotJSON = result;
                         console.log(ballotJSON)
 
-                        ballot_item = '<div class="ballot-result-left" id="ballot-result-left|' + voteRef + '">' + ballotJSON.objects["0"].ballot + '</div>'
+                        ballot_item = '<div class="floater"></div><div class="ballot-text">' + ballotJSON.objects["0"].ballot + '</div>';
                         console.log('#vote-result-item-left|' + voteRef)
-                        
+
+                        if (ballotJSON.objects["0"].ballot == 'Yes') {
+                            document.getElementById('vote-result-item-left|' + voteRef).classList.add('ballot-yes');
+                        } else if (ballotJSON.objects["0"].ballot == 'No') {
+                            document.getElementById('vote-result-item-left|' + voteRef).classList.add('ballot-no');
+                        }
+
                         document.getElementById('vote-result-item-left|' + voteRef).innerHTML = ballot_item;
 
                     }
@@ -267,8 +273,14 @@ window.onload = function() {
                         var ballotJSON = result;
                         console.log(ballotJSON)
 
-                        ballot_item = '<div class="ballot-result-right" id="ballot-result-right|' + voteRef + '">' + ballotJSON.objects["0"].ballot + '</div>'
+                        ballot_item = '<div class="floater"></div><div class="ballot-text">' + ballotJSON.objects["0"].ballot + '</div>';
                         //console.log('#vote-result-item-right|' + voteRef)
+
+                        if (ballotJSON.objects["0"].ballot == 'Yes') {
+                            document.getElementById('vote-result-item-right|' + voteRef).classList.add('ballot-yes');
+                        } else if (ballotJSON.objects["0"].ballot == 'No') {
+                            document.getElementById('vote-result-item-right|' + voteRef).classList.add('ballot-no');
+                        }
 
                         document.getElementById('vote-result-item-right|' + voteRef).innerHTML = ballot_item;
 
@@ -288,3 +300,5 @@ window.onload = function() {
     }
 
 }
+
+//TODO: accents in MP names are fucking everything up

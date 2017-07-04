@@ -56,17 +56,42 @@ svg {
 	background-color: lightgoldenrodyellow;
 }
 
+.vote-result {
+	display: flex;
+}
+
 .vote-result-item-centre {
 	background-color: darkgrey;
 	margin: 5px;
 }
 
-.ballot-result-left {
-	background-color: lightgreen;
+.left-ballot {
+	background-color: darkgrey;
 	margin: 5px;
 }
 
-.ballot-result-right {
-	background-color: lightcoral;
+.right-ballot {
+	background-color: darkgrey;
 	margin: 5px;
+}
+
+.ballot-yes {
+	background-color: lightgreen;
+}
+
+.ballot-no {
+	background-color: lightcoral;
+}
+
+/* I'm no sorry about this but it was the only way I could make it centre vertically */
+.floater {
+	float: left;
+	height: 50%;
+	width: 100%;
+	margin-bottom: -20%;
+}
+
+.ballot-text {
+	clear: both;
+	text-align: center;
 }

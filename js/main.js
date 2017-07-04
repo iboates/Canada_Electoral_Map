@@ -1,9 +1,11 @@
 window.onload = function() {
 
     side = $('input[name=left-or-right]:checked').val();
-    $('input[name=left-or-right]').change(function(){
+    $('input[name=left-or-right]').change(function() {
     	side = $('input[name=left-or-right]:checked').val();
-	})
+	});
+
+    appendVoteHistory();
 
     $('#get-bill-history-button').click(appendVoteHistory);
 
@@ -114,7 +116,7 @@ window.onload = function() {
 			success: function(result) {
 
                 ridingJSON = result;
-				//console.log(ridingJSON)
+                //console.log(ridingJSON)
 
                 $('#riding-name-' + side).text(ridingJSON.objects["0"].district_name);
                 $('#mp-name-' + side).text(ridingJSON.objects["0"].name);
@@ -134,7 +136,10 @@ window.onload = function() {
                     + mpName.replace(/ /g, '-').toLowerCase()
                     + '&format=json';
 
-			}
+                appendBallotHistory();
+
+            }
+
 		});
 
 	};
@@ -142,7 +147,7 @@ window.onload = function() {
 
 	function appendVoteHistory() {
 
-	    $('.vote-result-item-centre').parent().remove();
+	    $('.vote-description').parent().remove();
         $('.ballot-item-' + side).parent().remove();
 
 	    voteRequestString = 'http://api.openparliament.ca/votes/?format=json';
@@ -162,25 +167,42 @@ window.onload = function() {
 
             	for (var i=0; i<voteJSON.objects.length; i++) {
 
-                    vote_item = '<div class="row vote-result"><div class="col-sm-2 left-ballot" id="vote-result-item-left|'
-                                + voteJSON.objects[i].url
-                                + '"></div><div class="col-sm-8 vote-result-item-centre" id="vote-result-item-centre|'
-                                + voteJSON.objects[i].url
-                                + '"><b>'
-                                + voteJSON.objects[i].date
-                                + ':'
-                                + '</b> '
-                                + voteJSON.objects[i].description.en
-                                + '</div><div class="col-sm-2 right-ballot" id="vote-result-item-right|'
-                                + voteJSON.objects[i].url
-                                + '"></div></div>';
+            	    if (i%2 == 0) {
+
+                        vote_item = '<div class="row vote-result-even"><div class="col-sm-2 ballot-left" id="vote-result-item-left|'
+                            + voteJSON.objects[i].url
+                            + '"></div><div class="col-sm-8 vote-description" id="vote-description|'
+                            + voteJSON.objects[i].url
+                            + '"><b>'
+                            + voteJSON.objects[i].date
+                            + ':'
+                            + '</b> '
+                            + voteJSON.objects[i].description.en
+                            + '</div><div class="col-sm-2 ballot-right" id="vote-result-item-right|'
+                            + voteJSON.objects[i].url
+                            + '"></div></div>';
+
+                    } else {
+                        vote_item = '<div class="row vote-result-odd"><div class="col-sm-2 ballot-left" id="vote-result-item-left|'
+                            + voteJSON.objects[i].url
+                            + '"></div><div class="col-sm-8 vote-description" id="vote-description|'
+                            + voteJSON.objects[i].url
+                            + '"><b>'
+                            + voteJSON.objects[i].date
+                            + ':'
+                            + '</b> '
+                            + voteJSON.objects[i].description.en
+                            + '</div><div class="col-sm-2 ballot-right" id="vote-result-item-right|'
+                            + voteJSON.objects[i].url
+                            + '"></div></div>';
+                    }
 
                     $('#info-block-centre').append(vote_item);
 
                 }
 
                 console.log('trying to append ballots...')
-                    appendBallotHistory();
+                    //appendBallotHistory();
 
             }
 
@@ -191,15 +213,19 @@ window.onload = function() {
 
     function appendBallotHistory() {
 
-        if ( !$('#mp-name-left').is(':empty') ) {
+        if ( side == 'left' ) {
 
             var mpName = $('#mp-name-left').text();
 
-            console.log(mpName)
+            $('.ballot-text-left').remove();
+            $('.ballot-left')
+                .removeClass('ballot-yes')
+                .removeClass('ballot-no')
+                .removeClass('ballot-did-not-vote');
 
             function getBallot(i) {
 
-                var voteRef = $('.vote-result-item-centre')[i].id.split('|')[1];
+                var voteRef = $('.vote-description')[i].id.split('|')[1];
                 console.log(voteRef)
 
                 var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?vote='
@@ -221,13 +247,15 @@ window.onload = function() {
                         var ballotJSON = result;
                         console.log(ballotJSON)
 
-                        ballot_item = '<div class="floater"></div><div class="ballot-text">' + ballotJSON.objects["0"].ballot + '</div>';
+                        ballot_item = '<div class="floater"></div><div class="ballot-text-left">' + ballotJSON.objects["0"].ballot + '</div>';
                         console.log('#vote-result-item-left|' + voteRef)
 
                         if (ballotJSON.objects["0"].ballot == 'Yes') {
                             document.getElementById('vote-result-item-left|' + voteRef).classList.add('ballot-yes');
                         } else if (ballotJSON.objects["0"].ballot == 'No') {
                             document.getElementById('vote-result-item-left|' + voteRef).classList.add('ballot-no');
+                        } else if (ballotJSON.objects["0"].ballot == 'Didn\'t vote') {
+                            document.getElementById('vote-result-item-left|' + voteRef).classList.add('ballot-did-not-vote');
                         }
 
                         document.getElementById('vote-result-item-left|' + voteRef).innerHTML = ballot_item;
@@ -239,19 +267,25 @@ window.onload = function() {
             }
 
             // TODO: understand this because it is weird
-            for (var i = 0; i < $('.vote-result-item-centre').length; i++) {
+            for (var i = 0; i < $('.vote-description').length; i++) {
                 getBallot(i);
             }
 
         }
 
-        if ( !$('#mp-name-right').is(':empty') ) {
+        if ( side == 'right' ) {
 
             var mpName = $('#mp-name-right').text();
 
+            $('.ballot-text-right').remove();
+            $('.ballot-right')
+                .removeClass('ballot-yes')
+                .removeClass('ballot-no')
+                .removeClass('ballot-did-not-vote');
+
             function getBallot(i) {
 
-                var voteRef = $('.vote-result-item-centre')[i].id.split('|')[1];
+                var voteRef = $('.vote-description')[i].id.split('|')[1];
                 //console.log(voteRef)
 
                 var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?vote='
@@ -273,13 +307,15 @@ window.onload = function() {
                         var ballotJSON = result;
                         console.log(ballotJSON)
 
-                        ballot_item = '<div class="floater"></div><div class="ballot-text">' + ballotJSON.objects["0"].ballot + '</div>';
+                        ballot_item = '<div class="floater"></div><div class="ballot-text-right">' + ballotJSON.objects["0"].ballot + '</div>';
                         //console.log('#vote-result-item-right|' + voteRef)
 
                         if (ballotJSON.objects["0"].ballot == 'Yes') {
                             document.getElementById('vote-result-item-right|' + voteRef).classList.add('ballot-yes');
                         } else if (ballotJSON.objects["0"].ballot == 'No') {
                             document.getElementById('vote-result-item-right|' + voteRef).classList.add('ballot-no');
+                        } else if (ballotJSON.objects["0"].ballot == 'Didn\'t vote') {
+                            document.getElementById('vote-result-item-right|' + voteRef).classList.add('ballot-did-not-vote');
                         }
 
                         document.getElementById('vote-result-item-right|' + voteRef).innerHTML = ballot_item;
@@ -291,7 +327,7 @@ window.onload = function() {
             }
 
             // TODO: understand this because it is weird
-            for (var i = 0; i < $('.vote-result-item-centre').length; i++) {
+            for (var i = 0; i < $('.vote-description').length; i++) {
                 getBallot(i);
             }
 

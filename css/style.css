@@ -41,6 +41,7 @@ svg {
 }
 
 .info-block {
+	border-radius: 10px;
 	width: 100%;
 }
 
@@ -49,30 +50,45 @@ svg {
 }
 
 #info-block-centre {
-	background-color: lightblue;
+
 }
 
 #info-block-right {
 	background-color: lightgoldenrodyellow;
 }
 
-.vote-result {
+.row .vote-result-even {
+	background-color: white;
 	display: flex;
+	border-radius: 10px;
 }
 
-.vote-result-item-centre {
-	background-color: darkgrey;
-	margin: 5px;
+.row .vote-result-odd {
+	background-color: lightgrey;
+	display: flex;
+	border-radius: 10px;
 }
 
-.left-ballot {
-	background-color: darkgrey;
+.vote-description {
+	border: 2px solid darkgrey;
 	margin: 5px;
+	border-radius: 10px;
 }
 
-.right-ballot {
-	background-color: darkgrey;
+.ballot-left {
+	border: 2px solid darkgrey;
 	margin: 5px;
+	border-radius: 10px;
+}
+
+.ballot-right {
+	border: 2px solid darkgrey;
+	margin: 5px;
+	border-radius: 10px;
+}
+
+.ballot-did-not-vote {
+	background-color: darkgrey;
 }
 
 .ballot-yes {
@@ -88,7 +104,7 @@ svg {
 	float: left;
 	height: 50%;
 	width: 100%;
-	margin-bottom: -20%;
+	margin-bottom: -10%;
 }
 
 .ballot-text {

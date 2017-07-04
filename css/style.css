@@ -60,6 +60,7 @@ svg {
 .row .vote-result-even {
 	background-color: white;
 	display: flex;
+	border: 1px solid lightgrey;
 	border-radius: 10px;
 }
 
@@ -107,7 +108,12 @@ svg {
 	margin-bottom: -10%;
 }
 
-.ballot-text {
+.ballot-text-left {
+	clear: both;
+	text-align: center;
+}
+
+.ballot-text-right {
 	clear: both;
 	text-align: center;
 }

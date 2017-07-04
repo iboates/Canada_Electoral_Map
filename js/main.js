@@ -1,13 +1,13 @@
 window.onload = function() {
 
+    // initialize radio buttons for selecting the side
     side = $('input[name=left-or-right]:checked').val();
     $('input[name=left-or-right]').change(function() {
     	side = $('input[name=left-or-right]:checked').val();
 	});
 
+    // append the most recent votes
     appendVoteHistory();
-
-    $('#get-bill-history-button').click(appendVoteHistory);
 
 	//map frame dimensions
 	var width = 800;
@@ -49,10 +49,10 @@ window.onload = function() {
 	//use queue.js to parallelize asynchronous data loading
 	queue()
 		.defer(d3.json, "data/canada_districts_4326.topojson") //load geometry
-		.await(callback); //trigger callback function once data is loaded
+		.await(initializeMap); //trigger callback function once data is loaded
 
 
-	function callback(error) {
+	function initializeMap(error) {
 
         d3.json("data/canada_districts_4326.topojson", function(error, ridings) {
             if (error) throw error;
@@ -93,6 +93,7 @@ window.onload = function() {
 
 	}
 
+
     function zoomed() {
 
         projection.translate(d3.event.translate).scale(d3.event.scale);
@@ -130,11 +131,6 @@ window.onload = function() {
                 $('#mp-office-parl-fax-' + side).text(ridingJSON.objects["0"].offices["0"].fax);
                 $('#mp-photo-' + side).html('<img src="' + ridingJSON.objects["0"].photo_url + '">');
                 $('#mp-parl-url-' + side).text(ridingJSON.objects["0"].url);
-
-                var mpName = ridingJSON.objects["0"].name;
-                var ballotRequestString = 'http://api.openparliament.ca/votes/ballots/?politician='
-                    + mpName.replace(/ /g, '-').toLowerCase()
-                    + '&format=json';
 
                 appendBallotHistory();
 
